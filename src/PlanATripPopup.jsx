@@ -4,40 +4,21 @@ import { databaseRef } from "./firebaseConfig";
 export default function PlanATripPopup({ setShowTripPlanner, userEmail }) {
     const formRef = useRef();
     function onFormSubmit(e) {
-        e.preventDefault();
-        console.log('form ref is: ', formRef.current);
-       
-        // setShowTripPlanner()
-        let timeNow = new Date().getTime().toString();
-        let dataToadd = {
-            email: userEmail,
-            title: "sometitle",
-            start_date: 454544,
-            end_date: 3434343,
-            places_list: ["place1", "place2", "place3"],
-            status: 'upcoming',
-        };
-        // console.log(dataToadd);
-        // databaseRef
-        // .ref("trips/" + timeNow)
-        // .set({
-        //     email: userEmail,
-        //     title: "sometitle",
-        //     start_date: 454544,
-        //     end_date: 3434343,
-        //     places_list: ["place1", "place2", "place3"],
-        //     status: 'upcoming',
-        // })
-        // .then((data) => {
-        //     console.log('following data successfully added to DB: ', data),
-        // })
-        // .catch((error) => {
-        //   console.error(error.message);
-        // });
-    }
+      e.preventDefault();
+        let formData = new FormData(document.querySelector('form'));
+      formData.set('email', userEmail);
+      databaseRef.collection('trip-info').add(Object.fromEntries(formData))
+        .then((addedData) => {
+          console.log('Data with id: ' + addedData.id + ' Path: ' + addedData.path + ' successfully added to DB');
+          setShowTripPlanner(false);
+      }).catch((e) => {
+        console.error('Not able to add data to DB.', e);
+      })
+  }
+  
     function onFormCancel(e) {
-        e.preventDefault();
-        setShowTripPlanner(false);
+      e.preventDefault();
+      setShowTripPlanner(false);
     }
   return (
     <div className="plan-a-trip-container">
@@ -45,11 +26,11 @@ export default function PlanATripPopup({ setShowTripPlanner, userEmail }) {
       <form ref={formRef} className="plan-a-trip-form">
         <div className="form-controls">
           <label htmlFor="title">Title: </label>
-          <input type="text" id="title" className="title"></input>
+          <input name="title" type="text" id="title" className="title"></input>
         </div>
         <div className="form-controls">
           <label htmlFor="description">Description: </label>
-          <input type="text" id="description" className="description"></input>
+          <input name="description" type="text" id="description" className="description"></input>
         </div>
         <div className="date-ranges-container form-controls">
           <label>Date Range: </label>
@@ -67,6 +48,7 @@ export default function PlanATripPopup({ setShowTripPlanner, userEmail }) {
         <div className="form-controls">
           <label htmlFor="list-of-places-input">List of places: </label>
           <input
+            name="places-list"
             type="text"
             id="list-of-places-input"
             className="list-of-places-input"

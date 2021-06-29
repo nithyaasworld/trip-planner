@@ -1,6 +1,6 @@
-import firebase from 'firebase/app';
+import firebase from "firebase/app";
 import "firebase/auth";
-import "firebase/database";
+import "firebase/firestore";
 const firebaseConfig = {
     apiKey: "AIzaSyDenN5qfEl3UTGODaITwSw90uLYK6Y3rMo",
     authDomain: "trip-planner-1a249.firebaseapp.com",
@@ -12,7 +12,7 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 export let provider = new firebase.auth.GoogleAuthProvider();
-provider.setCustomParameters({ prompt: "select_account" });
+// provider.setCustomParameters({ prompt: "select_account" });
 
-export const databaseRef = firebase.database();
+export const databaseRef = firebase.firestore();
 export const firebaseAuth = firebase.auth();
